@@ -1,0 +1,81 @@
+package frc.robot.subsystems;
+
+import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.motorcontrol.PWMTalonFX;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DriveConstants;
+
+/** The subsystem representing the robot's ability to move around. */
+public class DriveSubsystem extends SubsystemBase {
+    // The motor on the left side of the drive.
+    private final PWMTalonFX leftMotor = new PWMTalonFX(DriveConstants.kLeftMotorPort);
+    // private final PWMSparkMax leftFollower = new
+    // PWMSparkMax(DriveConstants.kLeftMotor2Port);
+
+    // The motor on the right side of the drive.
+    private final PWMTalonFX rightMotor = new PWMTalonFX(DriveConstants.kRightMotorPort);
+    // private final PWMSparkMax rightFollower = new
+    // PWMSparkMax(DriveConstants.kRightMotor2Port);
+
+    // The robot's drive
+    private final DifferentialDrive drive = new DifferentialDrive(leftMotor, rightMotor);
+
+    // The left-side drive encoder
+    private final Encoder leftEncoder = new Encoder(
+            DriveConstants.kLeftEncoderPorts[0],
+            DriveConstants.kLeftEncoderPorts[1],
+            DriveConstants.kLeftEncoderReversed);
+
+    // The right-side drive encoder
+    private final Encoder rightEncoder = new Encoder(
+            DriveConstants.kRightEncoderPorts[0],
+            DriveConstants.kRightEncoderPorts[1],
+            DriveConstants.kRightEncoderReversed);
+
+    /** Creates a new DriveSubsystem. */
+    public DriveSubsystem() {
+        SendableRegistry.addChild(drive, leftMotor);
+        SendableRegistry.addChild(drive, rightMotor);
+
+        // leftLeader.addFollower(leftFollower);
+        // rightLeader.addFollower(rightFollower);
+
+        /*
+         * We need to invert one side of the drivetrain so that positive voltages
+         * result in both sides moving forward. Depending on how your robot's
+         * gearbox is constructed, you might have to invert the left side instead.
+         */
+        rightMotor.setInverted(true);
+
+        // Sets the distance per pulse for the encoders
+        leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+        rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+    }
+
+    /** Resets the drive encoders to currently read a position of 0. */
+    public void resetEncoders() {
+        leftEncoder.reset();
+        rightEncoder.reset();
+    }
+
+    /**
+     * Gets the average distance of the TWO encoders.
+     *
+     * @return the average of the TWO encoder readings
+     */
+    public double getAverageEncoderDistance() {
+        return (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0;
+    }
+
+    /**
+     * Sets the max output of the drive. Useful for scaling the drive to drive more
+     * slowly.
+     *
+     * @param maxOutput the maximum output to which the drive will be constrained
+     */
+    public void setMaxOutput(double maxOutput) {
+        drive.setMaxOutput(maxOutput);
+    }
+}
