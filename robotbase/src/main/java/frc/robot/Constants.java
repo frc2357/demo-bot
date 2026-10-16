@@ -2,9 +2,9 @@ package frc.robot;
 
 public class Constants {
     public static final class DriveConstants {
-        public static final int kLeftMotorPort = 14;
+        public static final int kLeftMotorPort = 11;
         // public static final int kLeftMotor2Port = 1;
-        public static final int kRightMotorPort = 15;
+        public static final int kRightMotorPort = 12;
         // public static final int kRightMotor2Port = 3;
 
         public static final int[] kLeftEncoderPorts = { 0, 1 };
@@ -20,6 +20,8 @@ public class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final int kMainMotorPort = 1;
+        public static final int kMainMotorPort = 21;
+
+        public static final int[] kEncoderPorts = {0, 2};
     }
 }

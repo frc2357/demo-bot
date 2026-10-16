@@ -23,16 +23,16 @@ public class DriveSubsystem extends SubsystemBase {
     private final DifferentialDrive drive = new DifferentialDrive(leftMotor, rightMotor);
 
     // The left-side drive encoder
-    private final Encoder leftEncoder = new Encoder(
-            DriveConstants.kLeftEncoderPorts[0],
-            DriveConstants.kLeftEncoderPorts[1],
-            DriveConstants.kLeftEncoderReversed);
+    // private final Encoder leftEncoder = new Encoder(
+    //         DriveConstants.kLeftEncoderPorts[0],
+    //         DriveConstants.kLeftEncoderPorts[1],
+    //         DriveConstants.kLeftEncoderReversed);
 
     // The right-side drive encoder
-    private final Encoder rightEncoder = new Encoder(
-            DriveConstants.kRightEncoderPorts[0],
-            DriveConstants.kRightEncoderPorts[1],
-            DriveConstants.kRightEncoderReversed);
+    // private final Encoder rightEncoder = new Encoder(
+    //         DriveConstants.kRightEncoderPorts[0],
+    //         DriveConstants.kRightEncoderPorts[1],
+    //         DriveConstants.kRightEncoderReversed);
 
     /** Creates a new DriveSubsystem. */
     public DriveSubsystem() {
@@ -49,15 +49,15 @@ public class DriveSubsystem extends SubsystemBase {
          */
         rightMotor.setInverted(true);
 
-        // Sets the distance per pulse for the encoders
-        leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
-        rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+        // // Sets the distance per pulse for the encoders
+        // leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+        // rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
     }
 
     /** Resets the drive encoders to currently read a position of 0. */
     public void resetEncoders() {
-        leftEncoder.reset();
-        rightEncoder.reset();
+        // leftEncoder.reset();
+        // rightEncoder.reset();
     }
 
     /**
@@ -66,7 +66,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return the average of the TWO encoder readings
      */
     public double getAverageEncoderDistance() {
-        return (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0;
+        return 0; // (leftEncoder.getDistance() + rightEncoder.getDistance()) / 2.0;
     }
 
     /**
@@ -77,5 +77,9 @@ public class DriveSubsystem extends SubsystemBase {
      */
     public void setMaxOutput(double maxOutput) {
         drive.setMaxOutput(maxOutput);
+    }
+
+    public void arcadeDrive() {
+        drive.arcadeDrive(1, 0);
     }
 }
