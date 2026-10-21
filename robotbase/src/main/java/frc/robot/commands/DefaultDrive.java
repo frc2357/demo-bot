@@ -8,9 +8,13 @@ public class DefaultDrive extends Command {
         addRequirements(Robot.driveSubsystem);
     }
 
-    @Override
-    public void execute() {
-        Robot.driveSubsystem.setMaxOutput(1);
-        Robot.driveSubsystem.arcadeDrive();
-    }
+    // @Override
+    // public void initialize() {
+    //     Robot.driveSubsystem.setSpeed(10);
+    // }
+
+    // @Override
+    // public void end(boolean interrupted) {
+    //     Robot.driveSubsystem.stop();
+    // }
 }

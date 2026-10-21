@@ -15,7 +15,7 @@ public class DriveStop extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        Robot.driveSubsystem.setMaxOutput(0);
+        Robot.driveSubsystem.stop();
     }
 
     @Override

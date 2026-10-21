@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.DefaultDrive;
 import frc.robot.subsystems.DriveSubsystem;
@@ -19,7 +20,7 @@ import frc.robot.subsystems.IntakeSubsystem;
  */
 public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
+  private static final String kCustomAuto = "Test";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public static DriveSubsystem driveSubsystem;
@@ -33,8 +34,10 @@ public class Robot extends TimedRobot {
     driveSubsystem = new DriveSubsystem();
     intakeSubsystem = new IntakeSubsystem();
 
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
+    // driveSubsystem.setDefaultCommand(new DefaultDrive());
+
+    m_chooser.setDefaultOption("Default", kDefaultAuto);
+    m_chooser.addOption("Drive Test", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
   }
 
@@ -46,7 +49,19 @@ public class Robot extends TimedRobot {
    * SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    Command command = driveSubsystem.getCurrentCommand();
+    String name;
+    if (command == null) {
+      name = "null";
+    } else {
+      name = command.getName();
+    }
+    SmartDashboard.putString("Current Command", name);
+    SmartDashboard.putString("Hello", "World");
+    SmartDashboard.putData(driveSubsystem);
+    SmartDashboard.updateValues();
+  }
 
   /**
    * This autonomous (along with the chooser code above) shows how to select between different
@@ -63,15 +78,15 @@ public class Robot extends TimedRobot {
     m_autoSelected = m_chooser.getSelected();
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     System.out.println("Auto selected: " + m_autoSelected);
-    // CommandScheduler.getInstance().schedule(new DefaultDrive());
+
+    // if (m_autoSelected == kCustomAuto) {
+    //   // CommandScheduler.getInstance().schedule(new DefaultDrive());
+    // }
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {
-    driveSubsystem.setMaxOutput(1);
-    driveSubsystem.arcadeDrive();
-  }
+  public void autonomousPeriodic() {}
 
   /** This function is called once when teleop is enabled. */
   @Override

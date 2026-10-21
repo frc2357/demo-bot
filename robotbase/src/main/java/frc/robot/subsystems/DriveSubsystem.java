@@ -1,26 +1,28 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.PWMTalonFX;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
 /** The subsystem representing the robot's ability to move around. */
 public class DriveSubsystem extends SubsystemBase {
     // The motor on the left side of the drive.
-    private final PWMTalonFX leftMotor = new PWMTalonFX(DriveConstants.kLeftMotorPort);
+    private final TalonFX leftMotor = new TalonFX(DriveConstants.kLeftMotorPort);
     // private final PWMSparkMax leftFollower = new
     // PWMSparkMax(DriveConstants.kLeftMotor2Port);
 
     // The motor on the right side of the drive.
-    private final PWMTalonFX rightMotor = new PWMTalonFX(DriveConstants.kRightMotorPort);
+    private final TalonFX rightMotor = new TalonFX(DriveConstants.kRightMotorPort);
     // private final PWMSparkMax rightFollower = new
     // PWMSparkMax(DriveConstants.kRightMotor2Port);
-
+    
     // The robot's drive
-    private final DifferentialDrive drive = new DifferentialDrive(leftMotor, rightMotor);
+    // private final DifferentialDrive drive = new DifferentialDrive();
 
     // The left-side drive encoder
     // private final Encoder leftEncoder = new Encoder(
@@ -36,8 +38,10 @@ public class DriveSubsystem extends SubsystemBase {
 
     /** Creates a new DriveSubsystem. */
     public DriveSubsystem() {
-        SendableRegistry.addChild(drive, leftMotor);
-        SendableRegistry.addChild(drive, rightMotor);
+        SendableRegistry.addChild(this, leftMotor);
+        SendableRegistry.addChild(this, rightMotor);
+        
+        // SendableRegistry.addChild(this, drive);
 
         // leftLeader.addFollower(leftFollower);
         // rightLeader.addFollower(rightFollower);
@@ -47,7 +51,7 @@ public class DriveSubsystem extends SubsystemBase {
          * result in both sides moving forward. Depending on how your robot's
          * gearbox is constructed, you might have to invert the left side instead.
          */
-        rightMotor.setInverted(true);
+        // rightMotor.setInverted(true);
 
         // // Sets the distance per pulse for the encoders
         // leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
@@ -73,13 +77,20 @@ public class DriveSubsystem extends SubsystemBase {
      * Sets the max output of the drive. Useful for scaling the drive to drive more
      * slowly.
      *
-     * @param maxOutput the maximum output to which the drive will be constrained
+     * @param speed the maximum output to which the drive will be constrained
      */
-    public void setMaxOutput(double maxOutput) {
-        drive.setMaxOutput(maxOutput);
+    public void setSpeed(double speed) {
+        leftMotor.set(speed);
+        rightMotor.set(speed);
     }
 
-    public void arcadeDrive() {
-        drive.arcadeDrive(1, 0);
+    public void drive(double speed, double forward, double rotation) {
+        leftMotor.set(speed * MathUtil.clamp(forward + rotation, -1, 1));
+        rightMotor.set(speed * MathUtil.clamp(forward - rotation, -1, 1));
+    }
+
+    public void stop() {
+        leftMotor.stopMotor();
+        rightMotor.stopMotor();
     }
 }
