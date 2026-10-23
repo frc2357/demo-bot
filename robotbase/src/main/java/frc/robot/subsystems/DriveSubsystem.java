@@ -1,8 +1,16 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Value;
+
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -51,7 +59,8 @@ public class DriveSubsystem extends SubsystemBase {
          * result in both sides moving forward. Depending on how your robot's
          * gearbox is constructed, you might have to invert the left side instead.
          */
-        // rightMotor.setInverted(true);
+        // rightMotor.getConfigurator().apply(new MotorOutputConfigs()
+        // .withInverted(InvertedValue.Clockwise_Positive));
 
         // // Sets the distance per pulse for the encoders
         // leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
@@ -84,9 +93,24 @@ public class DriveSubsystem extends SubsystemBase {
         rightMotor.set(speed);
     }
 
-    public void drive(double speed, double forward, double rotation) {
+    /**
+     * Sets the max output of the drive using the Units library. Useful for scaling the drive to drive more
+     * slowly.
+     *
+     * @param speed the maximum output to which the drive will be constrained
+     */
+    public void setSpeed(Dimensionless speed) {
+        setSpeed(speed.in(Value));
+    }
+
+    public void differentialDrive(double speed, double forward, double rotation) {
+        SmartDashboard.putNumber("CallTime", LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
         leftMotor.set(speed * MathUtil.clamp(forward + rotation, -1, 1));
         rightMotor.set(speed * MathUtil.clamp(forward - rotation, -1, 1));
+    }
+
+    public void differentialDrive(Dimensionless speed, Dimensionless forward, Dimensionless rotation) {
+        differentialDrive(speed.in(Value), forward.in(Value), rotation.in(Value));
     }
 
     public void stop() {

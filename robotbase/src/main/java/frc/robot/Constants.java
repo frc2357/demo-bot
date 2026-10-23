@@ -1,5 +1,9 @@
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Value;
+
+import edu.wpi.first.units.measure.Dimensionless;
+
 public class Constants {
     public static final class DriveConstants {
         public static final int kLeftMotorPort = 11;
@@ -23,5 +27,10 @@ public class Constants {
         public static final int kMainMotorPort = 21;
 
         public static final int[] kEncoderPorts = {0, 2};
+    }
+
+    public static final class ControllerConstants {
+        public static final int kDriverControllerPort = 0;
+        public static final Dimensionless kDriverSpeed = Value.of(1);
     }
 }

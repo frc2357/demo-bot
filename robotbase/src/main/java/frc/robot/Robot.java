@@ -4,12 +4,15 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Value;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.DefaultDrive;
+import frc.robot.controls.DriverControls;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
@@ -23,8 +26,11 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto = "Test";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  public static Robot currentInstance;
+  public static DriverControls driverControls;
   public static DriveSubsystem driveSubsystem;
   public static IntakeSubsystem intakeSubsystem;
+  private final DefaultDrive m_defaultDrive;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -33,12 +39,17 @@ public class Robot extends TimedRobot {
   public Robot() {
     driveSubsystem = new DriveSubsystem();
     intakeSubsystem = new IntakeSubsystem();
+    driverControls = new DriverControls();
 
+    m_defaultDrive = new DefaultDrive(ControllerConstants.kDriverSpeed, driverControls::getForwardInput, driverControls::getRotationZInput);
     // driveSubsystem.setDefaultCommand(new DefaultDrive());
 
     m_chooser.setDefaultOption("Default", kDefaultAuto);
     m_chooser.addOption("Drive Test", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
+    // SmartDashboard.putBoolean("TeleOp", false);
+
+    currentInstance = this;
   }
 
   /**
@@ -50,17 +61,20 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    Command command = driveSubsystem.getCurrentCommand();
-    String name;
-    if (command == null) {
-      name = "null";
-    } else {
-      name = command.getName();
-    }
-    SmartDashboard.putString("Current Command", name);
-    SmartDashboard.putString("Hello", "World");
-    SmartDashboard.putData(driveSubsystem);
-    SmartDashboard.updateValues();
+    CommandScheduler.getInstance().run();
+
+    // Command command = driveSubsystem.getCurrentCommand();
+    // String name;
+    // if (command == null) {
+    //   name = "null";
+    // } else {
+    //   name = command.getName();
+    // }
+    // SmartDashboard.putString("Current Command", name);
+    // SmartDashboard.putString("Hello", "World");
+    // SmartDashboard.putData(driveSubsystem);
+    // SmartDashboard.updateValues();
+    SmartDashboard.putBoolean("In Default Drive", CommandScheduler.getInstance().isScheduled(m_defaultDrive));
   }
 
   /**
@@ -90,11 +104,16 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    CommandScheduler.getInstance().schedule(m_defaultDrive);
+  }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    SmartDashboard.putNumber("Drive Forward", driverControls.getForwardInput().in(Value));
+    SmartDashboard.putNumber("Drive RotationZ", driverControls.getRotationZInput().in(Value));
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override
