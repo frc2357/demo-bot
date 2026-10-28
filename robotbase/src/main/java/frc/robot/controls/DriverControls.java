@@ -5,7 +5,7 @@ import static edu.wpi.first.units.Units.Value;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ControllerConstants;
-import frc.robot.commands.SetDriveSpeed;
+import frc.robot.commands.drive.SetDriveSpeed;
 
 public class DriverControls {
     private final CommandXboxController controller;

@@ -6,12 +6,15 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Value;
 
+import java.util.function.Supplier;
+
+import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.ControllerConstants;
-import frc.robot.commands.DefaultDrive;
+import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.controls.DriverControls;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -41,7 +44,14 @@ public class Robot extends TimedRobot {
     intakeSubsystem = new IntakeSubsystem();
     driverControls = new DriverControls();
 
-    m_defaultDrive = new DefaultDrive(ControllerConstants.kDriverSpeed, driverControls::getForwardInput, driverControls::getRotationZInput);
+    Supplier<Dimensionless> speedSupplier = () -> Value.of(SmartDashboard.getNumber("Driving Speed", ControllerConstants.kDefaultDriverSpeed.in(Value)));
+    SmartDashboard.putNumber("Driving Speed", speedSupplier.get().in(Value));
+
+    m_defaultDrive = new DefaultDrive(
+      speedSupplier, 
+      driverControls::getForwardInput, 
+      driverControls::getRotationZInput
+    );
     // driveSubsystem.setDefaultCommand(new DefaultDrive());
 
     m_chooser.setDefaultOption("Default", kDefaultAuto);
@@ -74,7 +84,7 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putString("Hello", "World");
     // SmartDashboard.putData(driveSubsystem);
     // SmartDashboard.updateValues();
-    SmartDashboard.putBoolean("In Default Drive", CommandScheduler.getInstance().isScheduled(m_defaultDrive));
+    // SmartDashboard.putBoolean("In Default Drive", CommandScheduler.getInstance().isScheduled(m_defaultDrive));
   }
 
   /**

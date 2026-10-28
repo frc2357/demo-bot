@@ -2,18 +2,12 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Value;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.measure.Dimensionless;
+import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
@@ -103,16 +97,37 @@ public class DriveSubsystem extends SubsystemBase {
         setSpeed(speed.in(Value));
     }
 
+    public void setSpeed(LinearVelocity speed) {
+        
+    }
+
+    /**
+     * Adjusts the speed of the drive for differential driving.
+     * 
+     * @param speed The maximum speed of the motors.
+     * @param forward The forward input to use.
+     * @param rotation The rotation z value.
+     */
     public void differentialDrive(double speed, double forward, double rotation) {
-        SmartDashboard.putNumber("CallTime", LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
+        // SmartDashboard.putNumber("CallTime", LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
         leftMotor.set(speed * MathUtil.clamp(forward + rotation, -1, 1));
         rightMotor.set(speed * MathUtil.clamp(forward - rotation, -1, 1));
     }
 
+    /**
+     * Adjusts the speed of the drive for differential driving using the Units library.
+     * 
+     * @param speed The maximum speed of the motors.
+     * @param forward The forward input to use.
+     * @param rotation The rotation z value.
+     */
     public void differentialDrive(Dimensionless speed, Dimensionless forward, Dimensionless rotation) {
         differentialDrive(speed.in(Value), forward.in(Value), rotation.in(Value));
     }
 
+    /** 
+     * Stops the movement of the drive.
+     */
     public void stop() {
         leftMotor.stopMotor();
         rightMotor.stopMotor();
