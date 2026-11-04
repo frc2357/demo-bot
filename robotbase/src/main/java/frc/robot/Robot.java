@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.commands.RunTeleop;
 import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.controls.DriverControls;
 import frc.robot.subsystems.DriveSubsystem;
@@ -33,7 +34,7 @@ public class Robot extends TimedRobot {
   public static DriverControls driverControls;
   public static DriveSubsystem driveSubsystem;
   public static IntakeSubsystem intakeSubsystem;
-  private final DefaultDrive m_defaultDrive;
+  private final RunTeleop m_runTeleop;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -44,15 +45,9 @@ public class Robot extends TimedRobot {
     intakeSubsystem = new IntakeSubsystem();
     driverControls = new DriverControls();
 
-    Supplier<Dimensionless> speedSupplier = () -> Value.of(SmartDashboard.getNumber("Driving Speed", ControllerConstants.kDefaultDriverSpeed.in(Value)));
-    SmartDashboard.putNumber("Driving Speed", speedSupplier.get().in(Value));
-
-    m_defaultDrive = new DefaultDrive(
-      speedSupplier, 
-      driverControls::getForwardInput, 
-      driverControls::getRotationZInput
-    );
-    // driveSubsystem.setDefaultCommand(new DefaultDrive());
+    SmartDashboard.putNumber("Driving Speed", SmartDashboard.getNumber("Driving Speed", ControllerConstants.kDefaultDriverSpeed.in(Value)));
+    
+    m_runTeleop = new RunTeleop();
 
     m_chooser.setDefaultOption("Default", kDefaultAuto);
     m_chooser.addOption("Drive Test", kCustomAuto);
@@ -115,14 +110,14 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    CommandScheduler.getInstance().schedule(m_defaultDrive);
+    CommandScheduler.getInstance().schedule(m_runTeleop);
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putNumber("Drive Forward", driverControls.getForwardInput().in(Value));
-    SmartDashboard.putNumber("Drive RotationZ", driverControls.getRotationZInput().in(Value));
+    SmartDashboard.putNumber("Drive Forward", driverControls.getLeftForwardInput().in(Value));
+    SmartDashboard.putNumber("Drive RotationZ", driverControls.getLeftRotationZInput().in(Value));
   }
 
   /** This function is called once when the robot is disabled. */

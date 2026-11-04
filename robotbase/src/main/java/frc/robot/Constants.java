@@ -1,9 +1,9 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Value;
 
-import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.Distance;
 
@@ -28,6 +28,7 @@ public class Constants {
 
     public static final class IntakeConstants {
         public static final int kMainMotorPort = 21;
+        public static final Dimensionless kAxisMaxSpeed = Percent.of(10);
 
         // public static final int[] kEncoderPorts = {0, 2};
     }

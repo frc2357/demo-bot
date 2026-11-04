@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -8,6 +9,8 @@ import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
@@ -98,7 +101,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void setSpeed(LinearVelocity speed) {
-        
+        // setSpeed(speed.div(DriveConstants.kWheelDiameter));
     }
 
     /**
@@ -131,5 +134,10 @@ public class DriveSubsystem extends SubsystemBase {
     public void stop() {
         leftMotor.stopMotor();
         rightMotor.stopMotor();
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Drive Stat", leftMotor.getSupplyVoltage().getValueAsDouble());
     }
 }

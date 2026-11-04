@@ -31,7 +31,7 @@ public class DefaultDrive extends Command {
 
     @Override
     public boolean isFinished() {
-        return !Robot.currentInstance.isTeleop();
+        return false;
     }
 
     @Override
