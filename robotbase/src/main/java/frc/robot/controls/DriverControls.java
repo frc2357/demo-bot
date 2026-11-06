@@ -18,7 +18,7 @@ public class DriverControls {
     }
 
     public Dimensionless getLeftRotationZInput() {
-        return Value.of(controller.getLeftX());
+        return Value.of(controller.getRightX());
     }
 
     public Dimensionless getRightTriggerAxis() {

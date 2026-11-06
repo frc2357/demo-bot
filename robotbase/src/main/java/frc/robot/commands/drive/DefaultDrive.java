@@ -18,14 +18,8 @@ public class DefaultDrive extends Command {
         m_rotation = rotation;
     }
 
-    // @Override
-    // public void initialize() {
-    //     SmartDashboard.putBoolean("TeleOp", true);
-    // }
-
     @Override
     public void execute() {
-        // System.out.println("EXECUTING");
         Robot.driveSubsystem.differentialDrive(m_speed.get(), m_forward.get(), m_rotation.get());
     }
 
@@ -36,7 +30,6 @@ public class DefaultDrive extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        // SmartDashboard.putBoolean("TeleOp", false);
         Robot.driveSubsystem.stop();
     }
 }

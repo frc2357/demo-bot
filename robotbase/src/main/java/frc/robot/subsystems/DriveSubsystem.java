@@ -1,16 +1,13 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.units.measure.LinearVelocity;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
@@ -18,50 +15,14 @@ import frc.robot.Constants.DriveConstants;
 public class DriveSubsystem extends SubsystemBase {
     // The motor on the left side of the drive.
     private final TalonFX leftMotor = new TalonFX(DriveConstants.kLeftMotorPort);
-    // private final PWMSparkMax leftFollower = new
-    // PWMSparkMax(DriveConstants.kLeftMotor2Port);
 
     // The motor on the right side of the drive.
     private final TalonFX rightMotor = new TalonFX(DriveConstants.kRightMotorPort);
-    // private final PWMSparkMax rightFollower = new
-    // PWMSparkMax(DriveConstants.kRightMotor2Port);
-    
-    // The robot's drive
-    // private final DifferentialDrive drive = new DifferentialDrive();
-
-    // The left-side drive encoder
-    // private final Encoder leftEncoder = new Encoder(
-    //         DriveConstants.kLeftEncoderPorts[0],
-    //         DriveConstants.kLeftEncoderPorts[1],
-    //         DriveConstants.kLeftEncoderReversed);
-
-    // The right-side drive encoder
-    // private final Encoder rightEncoder = new Encoder(
-    //         DriveConstants.kRightEncoderPorts[0],
-    //         DriveConstants.kRightEncoderPorts[1],
-    //         DriveConstants.kRightEncoderReversed);
 
     /** Creates a new DriveSubsystem. */
     public DriveSubsystem() {
         SendableRegistry.addChild(this, leftMotor);
         SendableRegistry.addChild(this, rightMotor);
-        
-        // SendableRegistry.addChild(this, drive);
-
-        // leftLeader.addFollower(leftFollower);
-        // rightLeader.addFollower(rightFollower);
-
-        /*
-         * We need to invert one side of the drivetrain so that positive voltages
-         * result in both sides moving forward. Depending on how your robot's
-         * gearbox is constructed, you might have to invert the left side instead.
-         */
-        // rightMotor.getConfigurator().apply(new MotorOutputConfigs()
-        // .withInverted(InvertedValue.Clockwise_Positive));
-
-        // // Sets the distance per pulse for the encoders
-        // leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
-        // rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
     }
 
     /** Resets the drive encoders to currently read a position of 0. */
@@ -91,7 +52,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Sets the max output of the drive using the Units library. Useful for scaling the drive to drive more
+     * Sets the max output of the drive using a dimensionless value. Useful for scaling the drive to drive more
      * slowly.
      *
      * @param speed the maximum output to which the drive will be constrained
@@ -100,8 +61,24 @@ public class DriveSubsystem extends SubsystemBase {
         setSpeed(speed.in(Value));
     }
 
+    /**
+     * Sets the max output of the drive using linear velocity. Useful for scaling the drive to drive more
+     * slowly.
+     *
+     * @param speed the maximum output in linear velocity to which the drive will be constrained
+     */
     public void setSpeed(LinearVelocity speed) {
-        // setSpeed(speed.div(DriveConstants.kWheelDiameter));
+        setSpeed(speed.div(DriveConstants.kDistancePerSecond));
+    }
+
+    /**
+     * Sets the max output of the drive using angular velocity. Useful for scaling the drive to drive more
+     * slowly.
+     *
+     * @param speed the maximum output in angular velocity to which the drive will be constrained
+     */
+    public void setSpeed(AngularVelocity speed) {
+        setSpeed(speed.per(DriveConstants.kBaseAngularVelocityUnit));
     }
 
     /**
@@ -128,16 +105,33 @@ public class DriveSubsystem extends SubsystemBase {
         differentialDrive(speed.in(Value), forward.in(Value), rotation.in(Value));
     }
 
+    /**
+     * Adjusts the speed of the drive for differential driving using the Units library.
+     * 
+     * @param speed The maximum speed of the motors in linear velocity.
+     * @param forward The forward input to use.
+     * @param rotation The rotation z value.
+     */
+    public void differentialDrive(LinearVelocity speed, Dimensionless forward, Dimensionless rotation) {
+        differentialDrive(speed.div(DriveConstants.kDistancePerSecond), forward, rotation);
+    }
+
+    /**
+     * Adjusts the speed of the drive for differential driving using the Units library.
+     * 
+     * @param speed The maximum speed of the motors in linear velocity.
+     * @param forward The forward input to use.
+     * @param rotation The rotation z value.
+     */
+    public void differentialDrive(AngularVelocity speed, Dimensionless forward, Dimensionless rotation) {
+        differentialDrive(speed.per(DriveConstants.kBaseAngularVelocityUnit), forward, rotation);
+    }
+
     /** 
      * Stops the movement of the drive.
      */
     public void stop() {
         leftMotor.stopMotor();
         rightMotor.stopMotor();
-    }
-
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("Drive Stat", leftMotor.getSupplyVoltage().getValueAsDouble());
     }
 }

@@ -6,16 +6,12 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.Value;
 
-import java.util.function.Supplier;
-
-import edu.wpi.first.units.measure.Dimensionless;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.RunTeleop;
-import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.controls.DriverControls;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -26,10 +22,6 @@ import frc.robot.subsystems.IntakeSubsystem;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "Test";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
   public static Robot currentInstance;
   public static DriverControls driverControls;
   public static DriveSubsystem driveSubsystem;
@@ -46,13 +38,9 @@ public class Robot extends TimedRobot {
     driverControls = new DriverControls();
 
     SmartDashboard.putNumber("Driving Speed", SmartDashboard.getNumber("Driving Speed", ControllerConstants.kDefaultDriverSpeed.in(Value)));
-    
-    m_runTeleop = new RunTeleop();
+    SmartDashboard.putNumber("Intake Speed", SmartDashboard.getNumber("Intake Speed", IntakeConstants.kDefaultAxisMaxSpeed.in(Value)));
 
-    m_chooser.setDefaultOption("Default", kDefaultAuto);
-    m_chooser.addOption("Drive Test", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
-    // SmartDashboard.putBoolean("TeleOp", false);
+    m_runTeleop = new RunTeleop();
 
     currentInstance = this;
   }
@@ -67,19 +55,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-
-    // Command command = driveSubsystem.getCurrentCommand();
-    // String name;
-    // if (command == null) {
-    //   name = "null";
-    // } else {
-    //   name = command.getName();
-    // }
-    // SmartDashboard.putString("Current Command", name);
-    // SmartDashboard.putString("Hello", "World");
-    // SmartDashboard.putData(driveSubsystem);
-    // SmartDashboard.updateValues();
-    // SmartDashboard.putBoolean("In Default Drive", CommandScheduler.getInstance().isScheduled(m_defaultDrive));
   }
 
   /**
@@ -93,15 +68,7 @@ public class Robot extends TimedRobot {
    * chooser code above as well.
    */
   @Override
-  public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
-
-    // if (m_autoSelected == kCustomAuto) {
-    //   // CommandScheduler.getInstance().schedule(new DefaultDrive());
-    // }
-  }
+  public void autonomousInit() {}
 
   /** This function is called periodically during autonomous. */
   @Override
