@@ -13,15 +13,15 @@ public class DriverControls {
         controller = new CommandXboxController(ControllerConstants.kDriverControllerPort);
     }
 
-    public Dimensionless getLeftForwardInput() {
+    public Dimensionless getDriveForwardInput() {
         return Value.of(-controller.getLeftY());
     }
 
-    public Dimensionless getLeftRotationZInput() {
+    public Dimensionless getDriveRotationZInput() {
         return Value.of(controller.getRightX());
     }
 
-    public Dimensionless getRightTriggerAxis() {
+    public Dimensionless getIntakeAxis() {
         return Value.of(controller.getRightTriggerAxis());
     }
 }

@@ -17,7 +17,7 @@ public class DifferentialDrive extends Command {
     }
 
     @Override
-    public void execute() {
+    public void initialize() {
         Robot.driveSubsystem.differentialDrive(m_speed, m_forward, m_rotation);
     }
 

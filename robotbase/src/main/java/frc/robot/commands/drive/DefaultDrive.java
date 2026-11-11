@@ -19,6 +19,11 @@ public class DefaultDrive extends Command {
     }
 
     @Override
+    public void initialize() {
+        Robot.driveSubsystem.coast();
+    }
+
+    @Override
     public void execute() {
         Robot.driveSubsystem.differentialDrive(m_speed.get(), m_forward.get(), m_rotation.get());
     }

@@ -83,8 +83,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putNumber("Drive Forward", driverControls.getLeftForwardInput().in(Value));
-    SmartDashboard.putNumber("Drive RotationZ", driverControls.getLeftRotationZInput().in(Value));
+    SmartDashboard.putNumber("Drive Forward", driverControls.getDriveForwardInput().in(Value));
+    SmartDashboard.putNumber("Drive RotationZ", driverControls.getDriveRotationZInput().in(Value));
   }
 
   /** This function is called once when the robot is disabled. */
