@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -47,12 +46,12 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Returns the current speed of the left motor in rotations per second.
+     * Returns the current speed of the left wheel in rotations per second.
      * 
-     * @return The current speed of the left motor in rotations per second.
+     * @return The current speed of the left wheel in rotations per second.
      */
     public AngularVelocity getLeftCurrentVelocity() {
-        return RotationsPerSecond.of(getLeftSpeed() * getCurrentLeftRps());
+        return DriveConstants.kWheelAngularVelocityPerRps.times(getLeftSpeed() * getCurrentLeftRps());
     }
 
     /**
@@ -65,12 +64,12 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Returns the current speed of the left motor in rotations per second.
+     * Returns the current speed of the right wheel in rotations per second.
      * 
-     * @return The current speed of the left motor in rotations per second.
+     * @return The current speed of the right wheel in rotations per second.
      */
     public AngularVelocity getRightCurrentVelocity() {
-        return RotationsPerSecond.of(getRightSpeed() * getCurrentRightRps());
+        return DriveConstants.kWheelAngularVelocityPerRps.times(getRightSpeed() * getCurrentRightRps());
     }
 
     /**
@@ -88,7 +87,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return The current speed of the left motor in rotations per second.
      */
     public AngularVelocity getAverageCurrentVelocity() {
-        return RotationsPerSecond.of(getAverageSpeed() * (getCurrentLeftRps() + getCurrentRightRps()) / 2);
+        return DriveConstants.kWheelAngularVelocityPerRps.times(getAverageSpeed() * (getCurrentLeftRps() + getCurrentRightRps()) / 2);
     }
 
     /**
@@ -118,7 +117,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return The left motor's rotations per second.
      */
     private double getCurrentLeftRps() {
-        return leftMotor.getMotorKV().getValueAsDouble() * leftMotor.getSupplyVoltage().getValueAsDouble() * 60;
+        return leftMotor.getMotorKV().getValueAsDouble() * leftMotor.getSupplyVoltage().getValueAsDouble() / 60;
     }
 
     /**
@@ -127,7 +126,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return The right motor's rotations per second.
      */
     private double getCurrentRightRps() {
-        return rightMotor.getMotorKV().getValueAsDouble() * rightMotor.getSupplyVoltage().getValueAsDouble() * 60;
+        return rightMotor.getMotorKV().getValueAsDouble() * rightMotor.getSupplyVoltage().getValueAsDouble() / 60;
     }
 
     /**
@@ -143,7 +142,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Sets the output of the drive using angular velocity. Useful for scaling the drive to drive more
+     * Sets the output of the drive using the angular velocity the wheels should go by. Useful for scaling the drive to drive more
      * slowly.
      *
      * @param speed the output in angular velocity to which the drive will target.
@@ -233,6 +232,7 @@ public class DriveSubsystem extends SubsystemBase {
     public void stop() {
         leftMotor.stopMotor();
         rightMotor.stopMotor();
+        brake();
     }
 
     /**

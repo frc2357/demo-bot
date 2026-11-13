@@ -3,8 +3,8 @@ package frc.robot.commands.drive;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 
-public class DriveStop extends Command {
-    public DriveStop() {
+public class StopDrive extends Command {
+    public StopDrive() {
         addRequirements(Robot.driveSubsystem);
     }
 

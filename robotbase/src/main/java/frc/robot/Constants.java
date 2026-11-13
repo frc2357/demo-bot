@@ -24,7 +24,7 @@ public class Constants {
 
     public static final class IntakeConstants {
         public static final int kMainMotorPort = 21;
-        public static final Dimensionless kDefaultAxisMaxSpeed = Percent.of(20);
+        public static final Dimensionless kDefaultAxisMaxSpeed = Percent.of(100);
     }
 
     public static final class ControllerConstants {

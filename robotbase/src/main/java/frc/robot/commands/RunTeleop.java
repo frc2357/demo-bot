@@ -13,7 +13,7 @@ public class RunTeleop extends ParallelCommandGroup {
     public RunTeleop() {
         super(new DefaultDrive(
                 () -> Value.of(
-                        SmartDashboard.getNumber("Driving Speed", ControllerConstants.kDefaultDriverSpeed.in(Value))),
+                        SmartDashboard.getNumber("Driving Speed", ControllerConstants.kDefaultDriverSpeed.in(Value))).times(Robot.driverControls.getLimiterSpeedMultiplier()),
                 Robot.driverControls::getDriveForwardInput,
                 Robot.driverControls::getDriveRotationZInput),
             new IntakeAxis(Robot.driverControls::getIntakeAxis));

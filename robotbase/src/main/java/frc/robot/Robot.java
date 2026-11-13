@@ -38,7 +38,7 @@ public class Robot extends TimedRobot {
     driverControls = new DriverControls();
 
     SmartDashboard.putNumber("Driving Speed", SmartDashboard.getNumber("Driving Speed", ControllerConstants.kDefaultDriverSpeed.in(Value)));
-    SmartDashboard.putNumber("Intake Speed", SmartDashboard.getNumber("Intake Speed", IntakeConstants.kDefaultAxisMaxSpeed.in(Value)));
+    SmartDashboard.putNumber("Intake Axis Speed", SmartDashboard.getNumber("Intake Axis Speed", IntakeConstants.kDefaultAxisMaxSpeed.in(Value)));
 
     m_runTeleop = new RunTeleop();
 
