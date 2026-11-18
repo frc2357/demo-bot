@@ -24,7 +24,7 @@ public class ApplyBrake extends Command {
     @Override
     public void execute() {
         long current = System.nanoTime();
-        double deltaTime = (current - lastTime) / 1_000_000_000;
+        double deltaTime = (current - lastTime) / 1_000_000_000d;
         DriveSubsystem drive = Robot.driveSubsystem;
         double speed = drive.getAverageSpeed();
         

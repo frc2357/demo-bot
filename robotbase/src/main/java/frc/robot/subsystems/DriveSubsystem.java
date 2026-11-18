@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Value;
 
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -51,7 +52,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return The current speed of the left wheel in rotations per second.
      */
     public AngularVelocity getLeftCurrentVelocity() {
-        return DriveConstants.kWheelAngularVelocityPerRps.times(getLeftSpeed() * getCurrentLeftRps());
+        return DriveConstants.kWheelAngularVelocityPerRps.times(getLeftSpeed() * getCurrentLeftRps()).times(RotationsPerSecond.one());
     }
 
     /**
@@ -69,7 +70,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return The current speed of the right wheel in rotations per second.
      */
     public AngularVelocity getRightCurrentVelocity() {
-        return DriveConstants.kWheelAngularVelocityPerRps.times(getRightSpeed() * getCurrentRightRps());
+        return DriveConstants.kWheelAngularVelocityPerRps.times(getRightSpeed() * getCurrentRightRps()).times(RotationsPerSecond.one());
     }
 
     /**
@@ -87,7 +88,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @return The current speed of the left motor in rotations per second.
      */
     public AngularVelocity getAverageCurrentVelocity() {
-        return DriveConstants.kWheelAngularVelocityPerRps.times(getAverageSpeed() * (getCurrentLeftRps() + getCurrentRightRps()) / 2);
+        return DriveConstants.kWheelAngularVelocityPerRps.times(getAverageSpeed() * (getCurrentLeftRps() + getCurrentRightRps()) / 2).times(RotationsPerSecond.one());
     }
 
     /**
@@ -136,7 +137,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @param speed the output in linear velocity to which the drive will target.
      */
     public void setSpeed(LinearVelocity speed) {
-        double desiredRps = speed.div(DriveConstants.kWheelDistancePerSecondPerRps).in(Value);
+        double desiredRps = speed.div(DriveConstants.kWheelDistancePerSecondForOne).in(Value);
         leftMotor.set(desiredRps / getCurrentLeftRps());
         rightMotor.set(desiredRps / getCurrentRightRps());
     }
@@ -148,7 +149,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @param speed the output in angular velocity to which the drive will target.
      */
     public void setSpeed(AngularVelocity speed) {
-        double desiredRps = speed.div(DriveConstants.kWheelAngularVelocityPerRps).in(Value);
+        double desiredRps = speed.div(DriveConstants.kWheelAngularVelocityPerRps).in(RotationsPerSecond);
         leftMotor.set(desiredRps / getCurrentLeftRps());
         rightMotor.set(desiredRps / getCurrentRightRps());
     }
@@ -210,7 +211,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @param rotation The rotation z value.
      */
     public void differentialDrive(LinearVelocity speed, Dimensionless forward, Dimensionless rotation) {
-        double desiredRps = speed.div(DriveConstants.kWheelDistancePerSecondPerRps).in(Value);
+        double desiredRps = speed.div(DriveConstants.kWheelDistancePerSecondForOne).in(Value);
         differentialDrive(desiredRps / getCurrentLeftRps(), desiredRps / getCurrentRightRps(), forward, rotation);
     }
 
@@ -222,7 +223,7 @@ public class DriveSubsystem extends SubsystemBase {
      * @param rotation The rotation z value.
      */
     public void differentialDrive(AngularVelocity speed, Dimensionless forward, Dimensionless rotation) {
-        double desiredRps = speed.div(DriveConstants.kWheelAngularVelocityPerRps).in(Value);
+        double desiredRps = speed.div(DriveConstants.kWheelAngularVelocityPerRps).in(RotationsPerSecond);
         differentialDrive(desiredRps / getCurrentLeftRps(), desiredRps / getCurrentRightRps(), forward, rotation);
     }
 

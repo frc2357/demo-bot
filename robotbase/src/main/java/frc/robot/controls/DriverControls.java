@@ -10,7 +10,7 @@ import frc.robot.Constants.ControllerConstants;
 
 public class DriverControls {
     private final CommandXboxController controller;
-    private MutDimensionless newDriveSpeed = new MutDimensionless(0, 0, Value); 
+    private MutDimensionless newDriveSpeed = new MutDimensionless(1, 1, Value); 
 
     public DriverControls() {
         controller = new CommandXboxController(ControllerConstants.kDriverControllerPort);
