@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
     intakeSubsystem = new IntakeSubsystem();
     driverControls = new DriverControls();
 
-    SmartDashboard.putNumber("Driving Speed", SmartDashboard.getNumber("Driving Speed", ControllerConstants.kDefaultDriverSpeed.in(Value)));
+    SmartDashboard.putNumber("Max Driving Speed", SmartDashboard.getNumber("Max Driving Speed", ControllerConstants.kDefaultDriverSpeed.in(Value)));
     SmartDashboard.putNumber("Intake Axis Speed", SmartDashboard.getNumber("Intake Axis Speed", IntakeConstants.kDefaultAxisMaxSpeed.in(Value)));
 
     m_runTeleop = new RunTeleop();
@@ -85,6 +85,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     SmartDashboard.putNumber("Drive Forward", driverControls.getDriveForwardInput().in(Value));
     SmartDashboard.putNumber("Drive RotationZ", driverControls.getDriveRotationZInput().in(Value));
+    SmartDashboard.putNumber("Current Max Driving Speed", SmartDashboard.getNumber("Max Driving Speed", ControllerConstants.kDefaultDriverSpeed.in(Value)) * driverControls.getLimiterSpeedMultiplier().in(Value));
   }
 
   /** This function is called once when the robot is disabled. */

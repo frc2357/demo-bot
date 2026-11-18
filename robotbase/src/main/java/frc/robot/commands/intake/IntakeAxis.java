@@ -20,7 +20,7 @@ public class IntakeAxis extends Command {
 
     @Override
     public void execute() {
-        Dimensionless maxSpeed = Value.of(SmartDashboard.getNumber("Intake Speed", IntakeConstants.kDefaultAxisMaxSpeed.in(Value)));
+        Dimensionless maxSpeed = Value.of(SmartDashboard.getNumber("Intake Axis Speed", IntakeConstants.kDefaultAxisMaxSpeed.in(Value)));
         Robot.intakeSubsystem.setSpeed(m_axis.get().times(maxSpeed));
     }
 
