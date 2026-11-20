@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.commands.RunTeleop;
+import frc.robot.commands.drive.DefaultDrive;
 import frc.robot.controls.DriverControls;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -22,11 +22,10 @@ import frc.robot.subsystems.IntakeSubsystem;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends TimedRobot {
-  public static Robot currentInstance;
   public static DriverControls driverControls;
   public static DriveSubsystem driveSubsystem;
   public static IntakeSubsystem intakeSubsystem;
-  private final RunTeleop m_runTeleop;
+  private final DefaultDrive m_defaultDrive;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -40,9 +39,11 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Max Driving Speed", SmartDashboard.getNumber("Max Driving Speed", ControllerConstants.kDefaultDriverSpeed.in(Value)));
     SmartDashboard.putNumber("Intake Axis Speed", SmartDashboard.getNumber("Intake Axis Speed", IntakeConstants.kDefaultAxisMaxSpeed.in(Value)));
 
-    m_runTeleop = new RunTeleop();
-
-    currentInstance = this;
+    m_defaultDrive = new DefaultDrive(
+                () -> Value.of(
+                        SmartDashboard.getNumber("Max Driving Speed", ControllerConstants.kDefaultDriverSpeed.in(Value))).times(Robot.driverControls.getLimiterSpeedMultiplier()),
+                driverControls::getDriveForwardInput,
+                driverControls::getDriveRotationZInput);
   }
 
   /**
@@ -77,7 +78,7 @@ public class Robot extends TimedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    CommandScheduler.getInstance().schedule(m_runTeleop);
+    CommandScheduler.getInstance().schedule(m_defaultDrive);
   }
 
   /** This function is called periodically during operator control. */

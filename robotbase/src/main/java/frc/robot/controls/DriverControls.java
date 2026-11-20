@@ -7,6 +7,7 @@ import edu.wpi.first.units.measure.MutDimensionless;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.commands.intake.IntakeAxis;
 
 public class DriverControls {
     private final CommandXboxController controller;
@@ -15,7 +16,8 @@ public class DriverControls {
     public DriverControls() {
         controller = new CommandXboxController(ControllerConstants.kDriverControllerPort);
 
-        controller.b().whileTrue(new RunCommand(() -> {
+        controller.rightTrigger(0).whileTrue(new IntakeAxis(() -> Value.of(controller.getRightTriggerAxis())));
+        controller.leftBumper().whileTrue(new RunCommand(() -> {
             newDriveSpeed.mut_setMagnitude(1d - Math.pow(controller.getLeftTriggerAxis(), 0.5));
         }));
     }
@@ -26,10 +28,6 @@ public class DriverControls {
 
     public Dimensionless getDriveRotationZInput() {
         return Value.of(controller.getRightX());
-    }
-
-    public Dimensionless getIntakeAxis() {
-        return Value.of(controller.getRightTriggerAxis());
     }
 
     public Dimensionless getLimiterSpeedMultiplier() {
